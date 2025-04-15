@@ -1,0 +1,106 @@
+<!-- templates/post_internship.html -->
+{% extends 'base.html' %}
+
+{% block title %}Post an Internship - Intern Connect{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item active">Post Internship</li>
+        </ol>
+    </nav>
+    
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            <h1 class="mb-4">Post a New Internship</h1>
+            
+            <form action="{{ url_for('post_internship') }}" method="post">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="title" class="form-label">Internship Title</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="company" class="form-label">Company Name</label>
+                        <!-- Check if user object exists, otherwise provide a fallback value -->
+                        <input type="text" class="form-control" id="company" name="company" value="{{ user.company if user else '' }}" required>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="location" class="form-label">Location</label>
+                        <input type="text" class="form-control" id="location" name="location" required>
+                        <div class="form-text">Enter city, state or "Remote"</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="category" class="form-label">Category</label>
+                        <select class="form-select" id="category" name="category" required>
+                            <option value="">Select a category</option>
+                            <option value="Engineering">Engineering</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Design">Design</option>
+                            <option value="Business">Business</option>
+                            <option value="Finance">Finance</option>
+                            <option value="Data Science">Data Science</option>
+                            <option value="IT">IT</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="duration" class="form-label">Duration</label>
+                        <input type="text" class="form-control" id="duration" name="duration" required>
+                        <div class="form-text">E.g., "3 months", "Summer 2025"</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="deadline" class="form-label">Application Deadline</label>
+                        <input type="date" class="form-control" id="deadline" name="deadline" required>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="is_paid" name="is_paid">
+                        <label class="form-check-label" for="is_paid">This is a paid internship</label>
+                    </div>
+                </div>
+                
+                <div class="mb-3" id="salaryField" style="display: none;">
+                    <label for="salary" class="form-label">Compensation Details</label>
+                    <input type="text" class="form-control" id="salary" name="salary">
+                    <div class="form-text">E.g., "$15/hour", "$1000/month", "Stipend available"</div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
+                    <div class="form-text">Describe the internship, responsibilities, and what interns will learn.</div>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="requirements" class="form-label">Requirements</label>
+                    <textarea class="form-control" id="requirements" name="requirements" rows="4" required></textarea>
+                    <div class="form-text">List skills, qualifications, or experiences required for this internship.</div>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Post Internship</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('is_paid').addEventListener('change', function() {
+        const salaryField = document.getElementById('salaryField');
+        salaryField.style.display = this.checked ? 'block' : 'none';
+    });
+</script>
+{% endblock %}

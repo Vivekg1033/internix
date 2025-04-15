@@ -1,0 +1,163 @@
+<!-- templates/profile.html -->
+{% extends 'base.html' %}
+
+{% block title %}Profile - Intern Connect{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-4 mb-4 mb-lg-0">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <img src="https://via.placeholder.com/150" class="rounded-circle img-thumbnail" alt="Profile Picture">
+                    </div>
+                    <h4>{{ user.name }}</h4>
+                    <p class="text-muted">
+                        {% if user.role == 'student' %}
+                            Student at {{ user.university }}
+                        {% else %}
+                            {{ user.company }}
+                        {% endif %}
+                    </p>
+                    <a href="{{ url_for('edit_profile') }}" class="btn btn-primary">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Profile Information</h5>
+                    <hr>
+                    
+                    <div class="row mb-3">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">Full Name</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                            {{ user.name }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">Email</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                            {{ user.email }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">Account Type</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                            {{ user.role|capitalize }}
+                        </div>
+                    </div>
+                    
+                    {% if user.role == 'student' %}
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">University</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{ user.university }}
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Major</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{ user.major }}
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Graduation Year</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{ user.grad_year }}
+                            </div>
+                        </div>
+                        
+                        {% if user.skills %}
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Skills</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{ user.skills }}
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if user.bio %}
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Bio</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{ user.bio }}
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                    {% elif user.role == 'employer' %}
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Company</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{ user.company }}
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Industry</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{ user.industry }}
+                            </div>
+                        </div>
+                        
+                        {% if user.website %}
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Website</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <a href="{{ user.website }}" target="_blank">{{ user.website }}</a>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if user.company_bio %}
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Company Description</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{ user.company_bio }}
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                    
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <a class="btn btn-primary" href="{{ url_for('edit_profile') }}">Edit Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

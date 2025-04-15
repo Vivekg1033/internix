@@ -1,0 +1,129 @@
+<!-- templates/index.html -->
+{% extends 'base.html' %}
+
+{% block title %}Intern Connect - Find Your Dream Internship{% endblock %}
+
+{% block content %}
+<section class="hero bg-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-3">Jump-start your career with the right internship</h1>
+                <p class="lead mb-4">Connect with top companies and find internships that match your skills and interests.</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{{ url_for('browse_internships') }}" class="btn btn-light btn-lg">Browse Internships</a>
+                    {% if not session.get('user') %}
+                    <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-lg">Sign Up</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block">
+                <img src="{{ url_for('static', filename='img/hero-image.svg') }}" alt="Internship illustration" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Featured Internships</h2>
+        
+        <div class="row">
+            {% if internships %}
+                {% for internship in internships %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="card-title mb-0">{{ internship.title }}</h5>
+                                <span class="badge bg-{{ 'success' if internship.is_paid else 'secondary' }}">{{ 'Paid' if internship.is_paid else 'Unpaid' }}</span>
+                            </div>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ internship.company }}</h6>
+                            <p class="card-text text-muted">
+                                <i class="bi bi-geo-alt"></i> {{ internship.location }}
+                            </p>
+                            <p class="card-text mb-3">{{ internship.description[:100] }}...</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    <i class="bi bi-clock"></i> {{ internship.duration }}
+                                </small>
+                                <a href="{{ url_for('view_internship', id=internship._id) }}" class="btn btn-outline-primary btn-sm">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center">
+                    <p>No internships available at the moment. Check back soon!</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{{ url_for('browse_internships') }}" class="btn btn-primary">View All Internships</a>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">How It Works</h2>
+        
+        <div class="row g-4">
+            <div class="col-md-4 text-center">
+                <div class="bg-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                    <i class="bi bi-search fs-2 text-primary"></i>
+                </div>
+                <h4>Find Opportunities</h4>
+                <p>Browse through various internship opportunities across different industries and locations.</p>
+            </div>
+            
+            <div class="col-md-4 text-center">
+                <div class="bg-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                    <i class="bi bi-file-earmark-text fs-2 text-primary"></i>
+                </div>
+                <h4>Apply Easily</h4>
+                <p>Submit your applications with just a few clicks and track your application status.</p>
+            </div>
+            
+            <div class="col-md-4 text-center">
+                <div class="bg-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                    <i class="bi bi-graph-up fs-2 text-primary"></i>
+                </div>
+                <h4>Grow Your Career</h4>
+                <p>Gain valuable experience and skills to boost your resume and future job prospects.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h2>For Students</h2>
+                <p class="lead">Discover internships that match your career goals and academic background.</p>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Build your professional network</li>
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Gain hands-on experience</li>
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Apply to multiple opportunities</li>
+                    <li><i class="bi bi-check-circle-fill text-success me-2"></i> Track your application status</li>
+                </ul>
+                <a href="{{ url_for('register') }}" class="btn btn-primary mt-3">Sign Up as a Student</a>
+            </div>
+            <div class="col-lg-6">
+                <h2>For Employers</h2>
+                <p class="lead">Connect with talented students and find the perfect interns for your company.</p>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Post internship opportunities</li>
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Review and manage applications</li>
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Discover passionate talent</li>
+                    <li><i class="bi bi-check-circle-fill text-success me-2"></i> Build your employer brand</li>
+                </ul>
+                <a href="{{ url_for('register') }}" class="btn btn-primary mt-3">Sign Up as an Employer</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

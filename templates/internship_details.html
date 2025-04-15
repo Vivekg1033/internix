@@ -1,0 +1,123 @@
+<!-- templates/internship_details.html -->
+{% extends 'base.html' %}
+
+{% block title %}{{ internship.title }} - Intern Connect{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('browse_internships') }}">Internships</a></li>
+            <li class="breadcrumb-item active">{{ internship.title }}</li>
+        </ol>
+    </nav>
+    
+    <div class="card shadow-sm mb-4">
+        <div class="card-body p-4">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center mb-2">
+                        <h1 class="h2 mb-0 me-2">{{ internship.title }}</h1>
+                        <span class="badge bg-{{ 'success' if internship.is_paid else 'secondary' }}">{{ 'Paid' if internship.is_paid else 'Unpaid' }}</span>
+                    </div>
+                    <h6 class="text-muted mb-3">{{ internship.company }} &middot; {{ internship.location }}</h6>
+                    
+                    <div class="mb-4">
+                        <div class="d-flex mb-2">
+                            <div class="me-4">
+                                <i class="bi bi-clock text-primary me-2"></i> {{ internship.duration }}
+                            </div>
+                            <div>
+                                <i class="bi bi-calendar-event text-primary me-2"></i> Deadline: {{ internship.deadline.strftime('%b %d, %Y') }}
+                            </div>
+                        </div>
+                        
+                        {% if internship.is_paid and internship.salary %}
+                        <div>
+                            <i class="bi bi-currency-dollar text-primary me-2"></i> {{ internship.salary }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="col-md-4 text-md-end">
+                    {% if session.get('user') and session['user']['role'] == 'student' %}
+                        {% if already_applied %}
+                            <button class="btn btn-success" disabled>
+                                <i class="bi bi-check-circle me-2"></i> Applied
+                            </button>
+                        {% else %}
+                            <a href="{{ url_for('apply_internship', internship_id=internship._id) }}" class="btn btn-primary">
+                                <i class="bi bi-send me-2"></i> Apply Now
+                            </a>
+                        {% endif %}
+                    {% elif not session.get('user') %}
+                        <a href="{{ url_for('login') }}" class="btn btn-primary">
+                            <i class="bi bi-box-arrow-in-right me-2"></i> Login to Apply
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h3>Description</h3>
+                    <p>{{ internship.description }}</p>
+                    
+                    <h3 class="mt-4">Requirements</h3>
+                    <p>{{ internship.requirements }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">About the Company</h5>
+                </div>
+                <div class="card-body">
+                    <h6>{{ employer.company }}</h6>
+                    <p class="mb-2">{{ employer.industry }}</p>
+                    {% if employer.website %}
+                    <p class="mb-3">
+                        <a href="{{ employer.website }}" target="_blank" class="text-decoration-none">
+                            <i class="bi bi-globe me-2"></i>{{ employer.website }}
+                        </a>
+                    </p>
+                    {% endif %}
+                    {% if employer.company_bio %}
+                    <p>{{ employer.company_bio }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Share This Opportunity</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="bi bi-twitter"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="bi bi-linkedin"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="bi bi-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

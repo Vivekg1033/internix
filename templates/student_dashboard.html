@@ -1,0 +1,111 @@
+<!-- templates/student_dashboard.html -->
+{% extends 'base.html' %}
+
+{% block title %}Student Dashboard - Intern Connect{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">Student Dashboard</h1>
+    
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">My Applications</h5>
+                </div>
+                <div class="card-body">
+                    {% if applied_internships %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Internship</th>
+                                        <th>Company</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for internship in applied_internships %}
+                                    <tr>
+                                        <td>{{ internship.title }}</td>
+                                        <td>{{ internship.company }}</td>
+                                        <td>
+                                            {% if internship.application_status == 'pending' %}
+                                                <span class="badge bg-warning text-dark">Pending</span>
+                                            {% elif internship.application_status == 'accepted' %}
+                                                <span class="badge bg-success">Accepted</span>
+                                            {% elif internship.application_status == 'rejected' %}
+                                                <span class="badge bg-danger">Rejected</span>
+                                            {% elif internship.application_status == 'interview' %}
+                                                <span class="badge bg-info">Interview</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="{{ url_for('view_internship', id=internship._id) }}" class="btn btn-sm btn-outline-primary">View</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-clipboard-x fs-1 text-muted mb-3"></i>
+                            <h5>No applications yet</h5>
+                            <p class="text-muted">You haven't applied to any internships yet.</p>
+                            <a href="{{ url_for('browse_internships') }}" class="btn btn-primary mt-2">Browse Internships</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Recommended for You</h5>
+                </div>
+                <div class="card-body">
+                    {% if recommended_internships %}
+                        {% for internship in recommended_internships %}
+                        <div class="mb-3">
+                            <h6><a href="{{ url_for('view_internship', id=internship._id) }}">{{ internship.title }}</a></h6>
+                            <p class="mb-1 text-muted">{{ internship.company }} &middot; {{ internship.location }}</p>
+                            <small class="text-muted">
+                                <i class="bi bi-clock me-1"></i> {{ internship.duration }}
+                                {% if internship.is_paid %}
+                                &middot; <i class="bi bi-currency-dollar me-1"></i> Paid
+                                {% endif %}
+                            </small>
+                        </div>
+                        {% if not loop.last %}<hr>{% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No recommendations available.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Profile Completion</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Profile Completion</span>
+                            <span>75%</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 75%"></div>
+                        </div>
+                    </div>
+                    <p class="text-muted small">Complete your profile to increase your chances of getting noticed by employers.</p>
+                    <a href="{{ url_for('edit_profile') }}" class="btn btn-outline-primary btn-sm">Update Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

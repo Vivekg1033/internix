@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}Employer Dashboard - Intern Connect{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Employer Dashboard</h1>
+        <a href="{{ url_for('post_internship') }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-2"></i>Post New Internship
+        </a>
+    </div>
+    
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">My Internship Listings</h5>
+        </div>
+        <div class="card-body">
+            {% if internships %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Posted Date</th>
+                                <th>Deadline</th>
+                                <th>Applications</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for internship in internships %}
+                            <tr>
+                                <td>{{ internship.title }}</td>
+                                <td>{{ internship.posted_date.strftime('%b %d, %Y') }}</td>
+                                <td>{{ internship.deadline.strftime('%b %d, %Y') }}</td>
+                                <td>
+                                    <a href="{{ url_for('view_applications', internship_id=internship._id) }}" class="text-decoration-none">
+                                        {{ internship.applications_count }} application{{ 's' if internship.applications_count != 1 else '' }}
+                                    </a>
+                                </td>
+                                <td>
+                                    {% if internship.deadline < now %}
+                                        <span class="badge bg-danger">Closed</span>
+                                    {% else %}
+                                        <span class="badge bg-success">Active</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                            Actions
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="{{ url_for('view_internship', id=internship._id) }}">View</a></li>
+                                            <li><a class="dropdown-item" href="{{ url_for('view_applications', internship_id=internship._id) }}">View Applications</a></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><a class="dropdown-item text-danger" href="#">Remove</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-4">
+                    <i class="bi bi-clipboard fs-1 text-muted mb-3"></i>
+                    <h5>No internships posted</h5>
+                    <p class="text-muted">You haven't posted any internships yet.</p>
+                    <a href="{{ url_for('post_internship') }}" class="btn btn-primary mt-2">Post an Internship</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-4 mb-lg-0">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Dashboard Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <h3>{{ internships|length }}</h3>
+                            <p class="text-muted mb-0">Internships</p>
+                        </div>
+                        <div class="col-4">
+                            <h3>{{ total_applications|default(0) }}</h3>
+                            <p class="text-muted mb-0">Applications</p>
+                        </div>
+                        <div class="col-4">
+                            <h3>{{ active_internships|default(0) }}</h3>
+                            <p class="text-muted mb-0">Active</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Recent Applications</h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_applications %}
+                        <div class="list-group list-group-flush">
+                            {% for application in recent_applications %}
+                            <div class="list-group-item px-0">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">{{ application.student.name }}</h6>
+                                        <p class="text-muted mb-0">Applied for {{ application.internship.title }}</p>
+                                    </div>
+                                    <span class="text-muted small">{{ application.applied_date|timeago }}</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted text-center my-3">No recent applications to show.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
